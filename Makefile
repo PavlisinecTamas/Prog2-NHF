@@ -1,6 +1,6 @@
 PROG = vonatjegy
-SRCS = include/*.cpp include/*.hpp main.cpp
-HEADS = include/*.h
+SRCS = *.cpp *.hpp
+HEADS = *.h
 
 CXX = g++
 CXXFLAGS = -pedantic -Wall -Werror
