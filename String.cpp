@@ -69,10 +69,6 @@ std::ostream& operator<<(std::ostream& os, const String& str) {
     return os;
 }
 
-std::istream& operator>>(std::istream& is, String& str) {
-    
-}
-
 String operator+(char c, const String& str) {
     return String(c) + str;
 }

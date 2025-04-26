@@ -15,7 +15,11 @@ public:
     void arr_delete(int idx)  {
 
     }
-    T operator[](int idx) {
+    T& operator[](int idx) {
+
+    }
+
+    int occ() const {
 
     }
     ~dyn_array() {

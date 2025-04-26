@@ -34,8 +34,6 @@ public:
 
 std::ostream& operator<<(std::ostream& os, const String& str);
 
-std::istream& operator>>(std::istream& is, String& str);
-
 String operator+(char ch, const String& str);
 
 #endif
