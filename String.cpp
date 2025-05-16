@@ -69,6 +69,24 @@ std::ostream& operator<<(std::ostream& os, const String& str) {
     return os;
 }
 
+std::istream& operator>>(std::istream& is, String& s0) {
+    unsigned char ch;
+    s0 = String("");            // üres string, ehhez fűzünk hozzá
+	std::ios_base::fmtflags fl = is.flags(); // eltesszük a régi flag-eket
+	is.setf(std::ios_base::skipws);			// az elején eldobjuk a ws-t
+    while (is >> ch) {
+	    is.unsetf(std::ios_base::skipws);	// utána pedig már nem
+        if (isspace(ch)) {
+            is.putback(ch);             // na ezt nem kérjük
+            break;
+        } else {
+            s0 = s0 + ch;               // végére fűzzük a karaktert
+        }
+    }
+	is.setf(fl);						// visszaállítjuk a flag-eket
+    return is;
+}
+
 String operator+(char c, const String& str) {
     return String(c) + str;
 }

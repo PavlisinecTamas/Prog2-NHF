@@ -3,12 +3,14 @@
 
 #include "Vonat.hpp"
 #include "Jegy.hpp"
+#include "Menu.h"
 #include "dyn_array.hpp"
+#ifdef CPORTA
 #include "gtest_lite.h"
-
+#endif
 
 int main() {
-
+#ifdef CPORTA
     TEST (Sztring, osszes) {
         // Az ötödik laborfeladaton bemutatott string osztály kód lefedettségéhez
         String s('d');
@@ -152,6 +154,15 @@ int main() {
             da.arr_delete(0);
         EXPECT_EQ(2, da.occ());
     } ENDM
+#endif
+
+#ifndef CPORTA
+    Menu menu;
+
+    while (menu.active()) {
+        menu.nextState();
+    }
+#endif
 
     return 0;
 }

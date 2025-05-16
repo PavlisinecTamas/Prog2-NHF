@@ -14,7 +14,7 @@ public:
         const char* ind_a = "",
         const char* ind_i = "",
         const char* erk_a = "",
-        const char* erk_i = ""): vonatszam(vszam), indulasi_allomas(ind_a),
+        const char* erk_i = ""): vonatszam(vszam), indulasi_allomas(ind_a), indulasi_ido(ind_i),
         erkezesi_allomas(erk_a), erkezesi_ido(erk_i) {}
     Vonat(const Vonat& v);
     String operator[](const String& attr) const;
