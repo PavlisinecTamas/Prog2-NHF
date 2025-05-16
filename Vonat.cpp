@@ -36,11 +36,11 @@ String Vonat::operator[](const String& attr) const {
 }
 
 Vonat::VonatAttr Vonat::toVonatAttr(const String& a) const {
-    if (std::strcmp(a.c_str(), "vonatszam")) return VonatAttr::vonatszam;
-    if (std::strcmp(a.c_str(), "indulasi_allomas")) return VonatAttr::indulasi_allomas;
-    if (std::strcmp(a.c_str(), "indulasi_ido")) return VonatAttr::indulasi_ido;
-    if (std::strcmp(a.c_str(), "erkezesi_allomas")) return VonatAttr::erkezesi_allomas;
-    if (std::strcmp(a.c_str(), "erkezesi_ido")) return VonatAttr::erkezesi_ido;
+    if (std::strcmp(a.c_str(), "vonatszam") == 0) return VonatAttr::vonatszam;
+    if (std::strcmp(a.c_str(), "indulasi_allomas") == 0) return VonatAttr::indulasi_allomas;
+    if (std::strcmp(a.c_str(), "indulasi_ido") == 0) return VonatAttr::indulasi_ido;
+    if (std::strcmp(a.c_str(), "erkezesi_allomas") == 0) return VonatAttr::erkezesi_allomas;
+    if (std::strcmp(a.c_str(), "erkezesi_ido") == 0) return VonatAttr::erkezesi_ido;
     return VonatAttr::ismeretlen;
 }
 

@@ -26,11 +26,11 @@ int main() {
         Jegy a(v, 4, "test");
 
         EXPECT_EQ(0, std::strcmp("test", a["hely"].c_str()));
-        EXPECT_EQ("test", a.get<String>("hely").c_str());
+        EXPECT_EQ(0, std::strcmp("test", a.get<String>("hely").c_str()));
 
         String& ss = a.get<String>("hely");
         ss = String("mas");
-        EXPECT_EQ("mas", a.get<String>("hely").c_str());
+        EXPECT_EQ(0, std::strcmp("mas", a.get<String>("hely").c_str()));
 
     } ENDM
 
@@ -53,12 +53,12 @@ int main() {
     TEST (vonat, elem_eleres) {
         Vonat v;
 
-        EXPECT_EQ("0", v["vonatszam"].c_str());
-        EXPECT_EQ("0", v.get<String>("vonatszam").c_str());
+        EXPECT_EQ(0, strcmp("0", v["vonatszam"].c_str()));
+        EXPECT_EQ(0, v.get<int>("vonatszam"));
 
         int& ss = v.get<int>("vonatszam");
         ss = 2;
-        EXPECT_EQ("2", v["vonatszam"].c_str());
+        EXPECT_EQ(0, std::strcmp("2", v["vonatszam"].c_str()));
 
     } ENDM
 

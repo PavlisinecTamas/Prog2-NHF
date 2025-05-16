@@ -74,14 +74,14 @@ String Jegy::operator[](const String& attr) const {
 }
 
 Jegy::JegyAttr Jegy::toJegyAttr(const String& a) const {
-    if (std::strcmp(a.c_str(), "vonat")) return JegyAttr::vonat;
-    if (std::strcmp(a.c_str(), "kocsiszam")) return JegyAttr::kocsiszam;
-    if (std::strcmp(a.c_str(), "hely")) return JegyAttr::hely;
-    if (std::strcmp(a.c_str(), "ar")) return JegyAttr::ar;
-    if (std::strcmp(a.c_str(), "kedvezmenyek")) return JegyAttr::kedvezmenyek;
-    if (std::strcmp(a.c_str(), "kocsiosztaly")) return JegyAttr::kocsiosztaly;
-    if (std::strcmp(a.c_str(), "retur")) return JegyAttr::retur;
-    if (std::strcmp(a.c_str(), "elado_allomas")) return JegyAttr::elado_allomas;
+    if (std::strcmp(a.c_str(), "vonat") == 0) return JegyAttr::vonat;
+    if (std::strcmp(a.c_str(), "kocsiszam") == 0) return JegyAttr::kocsiszam;
+    if (std::strcmp(a.c_str(), "hely") == 0) return JegyAttr::hely;
+    if (std::strcmp(a.c_str(), "ar") == 0) return JegyAttr::ar;
+    if (std::strcmp(a.c_str(), "kedvezmenyek") == 0) return JegyAttr::kedvezmenyek;
+    if (std::strcmp(a.c_str(), "kocsiosztaly") == 0) return JegyAttr::kocsiosztaly;
+    if (std::strcmp(a.c_str(), "retur") == 0) return JegyAttr::retur;
+    if (std::strcmp(a.c_str(), "elado_allomas") == 0) return JegyAttr::elado_allomas;
 
     return JegyAttr::ismeretlen;
 }
