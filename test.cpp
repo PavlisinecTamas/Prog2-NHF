@@ -1,7 +1,8 @@
 #include <iostream>
+#include <cstring>
 
-#include "Vonat.h"
-#include "Jegy.h"
+#include "Vonat.hpp"
+#include "Jegy.hpp"
 #include "dyn_array.hpp"
 #include "gtest_lite.h"
 
@@ -21,12 +22,13 @@ int main() {
     } ENDM
 
     TEST (jegy, elem_eleres) {
-        Jegy a(nullptr, 4, "test");
+        Vonat* v = new Vonat();
+        Jegy a(v, 4, "test");
 
-        EXPECT_EQ("test", a["hely"].c_str());
+        EXPECT_EQ(0, std::strcmp("test", a["hely"].c_str()));
         EXPECT_EQ("test", a.get<String>("hely").c_str());
 
-        String& ss = a.get<String&>("hely");
+        String& ss = a.get<String>("hely");
         ss = String("mas");
         EXPECT_EQ("mas", a.get<String>("hely").c_str());
 
@@ -54,7 +56,7 @@ int main() {
         EXPECT_EQ("0", v["vonatszam"].c_str());
         EXPECT_EQ("0", v.get<String>("vonatszam").c_str());
 
-        int& ss = v.get<int&>("vonatszam");
+        int& ss = v.get<int>("vonatszam");
         ss = 2;
         EXPECT_EQ("2", v["vonatszam"].c_str());
 

@@ -3,16 +3,16 @@ SRCS = *.cpp *.hpp
 HEADS = *.h
 
 CXX = g++
-CXXFLAGS = -pedantic -Wall -Werror
+CXXFLAGS = -pedantic -Wall -Werror -g
 
 .PHONY: all
 all: $(PROG)
 
 $(PROG): $(SRCS)
-	$(CXX) $(SRCS) -o $@
+	$(CXX) $(SRCS) $(CXXFLAGS) -o $@
 
 $(SRCS): $(HEADS)
 
 .PHONY: clean
 clean:
-	rm *.o $(PROG)
+	rm $(PROG)

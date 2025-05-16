@@ -1,0 +1,159 @@
+#include <stdexcept>
+#include <cstring>
+
+#include "Jegy.hpp"
+#include "String.h"
+
+Jegy::Jegy(const Jegy& j) {
+    vonat = j.vonat;
+    kocsiszam = j.kocsiszam;
+    hely = j.hely;
+    ar = j.ar;
+    kedvezmenyek = j.kedvezmenyek;
+    kocsiosztaly = j.kocsiosztaly;
+    retur = j.retur;
+    elado_allomas = j.elado_allomas;
+}
+
+bool Jegy::operator==(const Jegy& j) const {
+    return (
+        vonat == j.vonat &&
+        kocsiszam == j.kocsiszam &&
+        strcmp(hely.c_str(), j.hely.c_str()) == 0 &&
+        ar == j.ar &&
+        strcmp(kedvezmenyek.c_str(), j.kedvezmenyek.c_str()) == 0 &&
+        kocsiosztaly == j.kocsiosztaly &&
+        retur == j.retur &&
+        strcmp(elado_allomas.c_str(), j.elado_allomas.c_str()) == 0
+    );
+}
+
+bool Jegy::operator!=(const Jegy& j) const {
+    return !(this->operator==(j));
+}
+
+bool Jegy::operator>(const Jegy& j) const {
+    return ar > j.ar;
+}
+
+bool Jegy::operator<(const Jegy& j) const {
+    return ar < j.ar;
+}
+
+String Jegy::operator[](const String& attr) const {
+    switch (this->toJegyAttr(attr))
+    {
+    case JegyAttr::vonat:
+        return (*vonat)["vonatszam"];
+        break;
+    case JegyAttr::kocsiszam:
+        return String(std::to_string(kocsiszam).c_str());
+        break;
+    case JegyAttr::hely:
+        return hely;
+        break;
+    case JegyAttr::ar:
+        return String(std::to_string(ar).c_str());
+        break;
+    case JegyAttr::kedvezmenyek:
+        return kedvezmenyek;
+        break;
+    case JegyAttr::kocsiosztaly:
+        return String(std::to_string(kocsiosztaly).c_str());
+        break;
+    case JegyAttr::retur:
+        return ((retur) ? String("True") : String("False"));
+        break;
+    case JegyAttr::elado_allomas:
+        return elado_allomas;
+        break;
+    default:
+        throw std::invalid_argument("A Jegy osztálynak nincs ilyen mezoje.");
+        break;
+    }
+}
+
+Jegy::JegyAttr Jegy::toJegyAttr(const String& a) const {
+    if (std::strcmp(a.c_str(), "vonat")) return JegyAttr::vonat;
+    if (std::strcmp(a.c_str(), "kocsiszam")) return JegyAttr::kocsiszam;
+    if (std::strcmp(a.c_str(), "hely")) return JegyAttr::hely;
+    if (std::strcmp(a.c_str(), "ar")) return JegyAttr::ar;
+    if (std::strcmp(a.c_str(), "kedvezmenyek")) return JegyAttr::kedvezmenyek;
+    if (std::strcmp(a.c_str(), "kocsiosztaly")) return JegyAttr::kocsiosztaly;
+    if (std::strcmp(a.c_str(), "retur")) return JegyAttr::retur;
+    if (std::strcmp(a.c_str(), "elado_allomas")) return JegyAttr::elado_allomas;
+
+    return JegyAttr::ismeretlen;
+}
+
+template<>
+Vonat*& Jegy::get<Vonat*>(const String& attr) {
+    JegyAttr jegyA = this->toJegyAttr(attr);
+
+    if (jegyA == JegyAttr::vonat) return vonat;
+    if (jegyA == JegyAttr::ismeretlen) throw nincs_mezo;
+    throw hibas_tipus;
+}
+
+template<>
+String& Jegy::get<String>(const String& attr) {
+    JegyAttr jegyA = this->toJegyAttr(attr);
+
+    switch (jegyA) 
+    {
+        case JegyAttr::hely:
+            return hely;
+            break;
+        case JegyAttr::kedvezmenyek:
+            return kedvezmenyek;
+            break;
+        case JegyAttr::elado_allomas:
+            return elado_allomas;
+            break;
+        case JegyAttr::ismeretlen:
+            throw nincs_mezo;
+            break;
+        default:
+            throw hibas_tipus;
+            break;
+    }
+}
+
+template<>
+int& Jegy::get<int>(const String& attr) {
+    JegyAttr jegyA = this->toJegyAttr(attr);
+
+    switch (jegyA)
+    {
+        case JegyAttr::kocsiszam:
+            return kocsiszam;
+            break;
+        case JegyAttr::kocsiosztaly:
+            return kocsiosztaly;
+            break;
+        case JegyAttr::ismeretlen:
+            throw nincs_mezo;
+            break;
+        default:
+            throw hibas_tipus;
+            break;
+    }
+}
+
+template<>
+double& Jegy::get<double>(const String& attr) {
+    JegyAttr jegyA = this->toJegyAttr(attr);
+
+    if (jegyA == JegyAttr::ar) return ar;
+    if (jegyA == JegyAttr::ismeretlen) throw nincs_mezo;
+    throw hibas_tipus;
+}
+
+template<>
+bool& Jegy::get<bool>(const String& attr) {
+    JegyAttr jegyA = this->toJegyAttr(attr);
+
+    if (jegyA == JegyAttr::retur) return retur;
+    if (jegyA == JegyAttr::ismeretlen) throw nincs_mezo;
+    throw hibas_tipus;
+}
