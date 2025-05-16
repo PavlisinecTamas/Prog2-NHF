@@ -29,12 +29,12 @@ public:
 
     void arr_delete(int idx)  {
         if (idx >= 0 && idx <= occupied) {
-            for (int i = idx; i < occupied; i++) {
+            for (int i = idx; i < occupied-1; i++) {
                 pData[i] = pData[i + 1];
             }
             occupied--;
-            if ((capacity / occupied) <= 0.5) {
-                capacity = (int)(0.75 * capacity);
+            if ((occupied / capacity) <= 0.5) {
+                capacity = (int)(0.75 * capacity) + 1;
                 T* pData_new = new T[capacity];
                 for (int i = 0; i < occupied; i++) {
                     pData_new[i] = pData[i];
@@ -49,7 +49,7 @@ public:
 
     T& operator[](int idx) {
         if (idx >= 0 && idx <= occupied) {
-            return pData[0];
+            return pData[idx];
         } else {
             throw std::out_of_range("dyn_array: hibas index");
         }

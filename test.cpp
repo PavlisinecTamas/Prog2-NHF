@@ -8,6 +8,21 @@
 
 
 int main() {
+
+    TEST (Sztring, osszes) {
+        // Az ötödik laborfeladaton bemutatott string osztály kód lefedettségéhez
+        String s('d');
+        String ss1, ss2;
+
+        ss1 = ss2 = s;
+
+        ss1 = ss1 + String("shesh");
+        ss2 = ss2 + 'c';
+
+        EXPECT_EQ('s', ss1[1]);
+        EXPECT_THROW(ss1[200], const char*);
+        String ss3 = ss1 + ss2;
+    } ENDM
     
     TEST (jegy, operatorok) {
         Jegy a;
@@ -31,6 +46,8 @@ int main() {
         String& ss = a.get<String>("hely");
         ss = String("mas");
         EXPECT_EQ(0, std::strcmp("mas", a.get<String>("hely").c_str()));
+
+        delete v;
 
     } ENDM
 
@@ -119,6 +136,21 @@ int main() {
         EXPECT_EQ(1, da.occ());
         da[0] = 123;
         EXPECT_EQ(123, da[0]);
+
+        EXPECT_ANY_THROW(da[100]);
+        EXPECT_ANY_THROW(da.arr_delete(203));
+
+        da.append(132);
+        da.append(123);
+        da.append(731);
+        da.append(938);
+        da.append(6370);
+        da.append(636);
+        da.append(643);
+
+        for (int i = 0; i < 6; i++)
+            da.arr_delete(0);
+        EXPECT_EQ(2, da.occ());
     } ENDM
 
     return 0;
