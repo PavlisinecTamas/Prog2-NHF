@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
+#include <limits>
 
 #include "Menu.h"
 #include "Vonat.hpp"
@@ -25,6 +26,13 @@ void Menu::alap()  {
     while (!(valasztas >= 1 && valasztas <= 8)) {
         std::cout << "Művelet választás(1-8): ";
         std::cin >> valasztas;
+        if (std::cin.eof()) {
+            std::exit(-1);
+        }
+        if (!std::cin) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
     }
 
     switch (valasztas) 
@@ -97,10 +105,12 @@ void Menu::vonatadat() {
 }
 
 Vonat* Menu::find_vonat(const int vsz) {
+    // ha van ilyen vonat megkeressük
     for (int i = 0; i < vonatok.occ(); i++) {
         if (vonatok[i].get<int>("vonatszam") == vsz)
             return &(vonatok[i]);
     }
+    // ha nincs akkor felveszünk egy újat
     vonatok.append(Vonat(vsz));
     return &(vonatok[vonatok.occ() - 1]);
 }
@@ -180,9 +190,43 @@ void Menu::jegyadat() {
     current = MenuState::Alap;
 }
 
+static void check_cin() {
+    if (!std::cin.good()) {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        if (std::cin.eof())
+            std::exit(-1);
+        throw std::invalid_argument("Menu::vonatfel: Hibas bemenet");
+    }
+}
+
 void Menu::vonatfel() {
-    std::cout << ">>vonatfel" << std::endl;
+    std::cout << "Vonat felvétele: " << std::endl;
     current = MenuState::Alap;
+    Vonat v;
+    try {
+        std::cout << "[Új vonat][vonatszam]: ";
+        std::cin >> v.get<int>("vonatszam"); 
+        check_cin();
+        const int& vsz = v.get<int>("vonatszam");
+        std::cout << '[' << vsz << ']' << "[indulasi_allomas]: ";
+        std::cin >> v.get<String>("indulasi_allomas");
+        check_cin();
+        std::cout << '[' << vsz << ']' << "[indulasi_ido]: ";
+        std::cin >> v.get<String>("indulasi_ido");
+        check_cin();
+        std::cout << '[' << vsz << ']' << "[erkezesi_allomas]: ";
+        std::cin >> v.get<String>("erkezesi_allomas");
+        check_cin();
+        std::cout << '[' << vsz << ']' << "[erkezesi_ido]: ";
+        std::cin >> v.get<String>("erkezesi_ido");
+        check_cin();
+        vonatok.append(v);
+    } catch (...) {
+        std::cout << "[Új vonat] Vonat felvétele sikertelen" << std::endl;
+        return;
+    }
+    std::cout << '[' << v["vonatszam"] << ']' <<" Vonat felvétele sikeres" << std::endl;
 }
 
 void Menu::vonattor() {

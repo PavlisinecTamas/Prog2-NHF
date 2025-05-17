@@ -4,17 +4,6 @@
 #include "Jegy.hpp"
 #include "String.h"
 
-Jegy::Jegy(const Jegy& j) {
-    vonat = j.vonat;
-    kocsiszam = j.kocsiszam;
-    hely = j.hely;
-    ar = j.ar;
-    kedvezmenyek = j.kedvezmenyek;
-    kocsiosztaly = j.kocsiosztaly;
-    retur = j.retur;
-    elado_allomas = j.elado_allomas;
-}
-
 bool Jegy::operator==(const Jegy& j) const {
     return (
         vonat == j.vonat &&
@@ -68,7 +57,7 @@ String Jegy::operator[](const String& attr) const {
         return elado_allomas;
         break;
     default:
-        throw std::invalid_argument("A Jegy osztálynak nincs ilyen mezoje.");
+        throw nincs_mezo;
         break;
     }
 }
