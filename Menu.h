@@ -9,6 +9,8 @@ class Menu {
     bool running = true;
     dyn_array<Vonat> vonatok;
     dyn_array<Jegy> jegyek;
+    std::istream& cinput;
+    std::ostream& coutput;
     enum class MenuState {
         Alap,
         VonatAdat,
@@ -34,10 +36,10 @@ class Menu {
     bool str_to_bool(const String& s) const;
 
 public:
-    Menu(): vonatok(dyn_array<Vonat>()), jegyek(dyn_array<Jegy>()) {};
+    Menu(std::istream& ci = std::cin, std::ostream& co = std::cout): vonatok(dyn_array<Vonat>()), jegyek(dyn_array<Jegy>()), cinput(ci), coutput(co) {};
 
     inline bool active() const {return running;}
-
+    void check_cin(bool dob);
     void nextState();
 };
 

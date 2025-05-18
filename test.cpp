@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <sstream>
 
 #include "Vonat.hpp"
 #include "Jegy.hpp"
@@ -7,11 +8,12 @@
 
 #include "Menu.h"
 
-#ifdef CPORTA
+
 #include "gtest_lite.h"
-#endif
+#define MEMTRACE
+
 int main() {
-#ifdef CPORTA
+#ifdef MEMTRACE
     TEST (Sztring, osszes) {
         // Az ötödik laborfeladaton bemutatott string osztály kód lefedettségéhez
         String s('d');
@@ -189,15 +191,27 @@ int main() {
             da.arr_delete(0);
         EXPECT_EQ(2, da.occ());
     } ENDM
-    #endif
     
-    #ifndef CPORTA
-    Menu menu;
-    
-    while (menu.active()) {
-        menu.nextState();
-    }
-    #endif
+    TEST (Menurendszer, normal) {
+        std::stringstream is, os;
+        is << "1\nb\ni\nvonatok.txt\n6\nn\n";
+        is << "8\n";
+        Menu m(is, os);
+        EXPECT_NO_THROW(m.nextState());
+        EXPECT_NO_THROW(m.nextState());
+        EXPECT_NO_THROW(m.nextState());
+
+    } ENDM
+#endif
+
+
+#ifndef MEMTRACE
+Menu menu;
+
+while (menu.active()) {
+    menu.nextState();
+}
+#endif
 
     return 0;
 }
