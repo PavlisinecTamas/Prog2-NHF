@@ -75,7 +75,7 @@ void Menu::vonatadat() {
     }
     if (valasz2 == 'i') {
         while (vonatok.occ() > 0)
-        vonatok.arr_delete(0);
+            vonatok.arr_delete(0);
     }
     String fajlnev;
     coutput << "Fájlnév: ";
@@ -131,9 +131,8 @@ Vonat* Menu::find_vonat(const int vsz) {
         if (vonatok[i].get<int>("vonatszam") == vsz)
             return &(vonatok[i]);
     }
-    // ha nincs akkor felveszünk egy újat
-    vonatok.append(Vonat(vsz));
-    return &(vonatok[vonatok.occ() - 1]);
+    // ha nincs akkor NULL-t adunk vissza
+    return NULL;
 }
 
 bool Menu::str_to_bool(const String& s) const {
@@ -256,7 +255,30 @@ void Menu::vonatfel() {
     coutput << '[' << v["vonatszam"] << ']' <<" Vonat felvétele sikeres" << std::endl;
 }
 
+void Menu::talalat(int idx, bool& d_a, bool& c) {
+    coutput << "Vonatszám: " << vonatok[idx]["vonatszam"] << '\t'
+                << "Honnan: " << vonatok[idx]["indulasi_allomas"] << '\t'
+                << "Indul: " << vonatok[idx]["indulasi_ido"] << '\t'
+                << "Hova: " << vonatok[idx]["erkezesi_allomas"] << '\t'
+                << "Érkezik: " << vonatok[idx]["erkezesi_ido"] << std::endl;
+    char valasz = 'k';
+    while (!(valasz == 'i' || valasz == 'n' || valasz == 'a' || valasz == 'c')) {
+        cinput.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        coutput << "Találat (i: töröl, n: nem töröl, a: összes töröl, c: megszakít): ";
+        cinput >> valasz;
+        check_cin();
+    }
+    switch (valasz) {
+        case 'i': vonatok.arr_delete(idx); break;
+        case 'n': return; break;
+        case 'a': {vonatok.arr_delete(idx);d_a = true; break;}
+        case 'c': c = true; break;
+    }
+
+}
+
 void Menu::vonattor() {
+    current = MenuState::Alap;
     coutput << "Melyik mező alapján történjen a törlés?" << std::endl;
 
     coutput << "\t1. vonatszam" << std::endl;
@@ -271,8 +293,81 @@ void Menu::vonattor() {
         cinput >> valasztas;
         check_cin();
     }
-    coutput << (Vonat::VonatAttr::vonatszam == Vonat::VonatAttr(1)) << std::endl;
-    current = MenuState::Alap;
+    String ertek;
+    coutput << "Keresett vonat mezőjének értéke (whitespace eldobásra kerül): ";
+    cinput >> ertek;
+    check_cin();
+    bool del_all = false;
+    bool cancel = false;
+    for (int i = 0; i < vonatok.occ(); i++) {
+        if (cancel)
+            return;
+        switch (valasztas) {
+            case 1:
+            {
+                if (0 == std::strcmp(vonatok[i]["vonatszam"].c_str(), ertek.c_str())) {
+                    if (del_all)
+                        vonatok.arr_delete(i);
+                    else
+                        talalat(i, del_all, cancel);
+                    i--; // mert arr_delete minden utánna következő elem indexét egyel csökkenti
+                }
+                break;
+            }
+            case 2:
+            {
+                if (0 == std::strcmp(vonatok[i]["indulasi_allomas"].c_str(), ertek.c_str())) {
+                    if (del_all)
+                        vonatok.arr_delete(i);
+                    else
+                        talalat(i, del_all, cancel);
+                    i--; // mert arr_delete minden utánna következő elem indexét egyel csökkenti
+
+                }
+                break;
+            }
+            case 3:
+            {
+                if (0 == std::strcmp(vonatok[i]["indulasi_ido"].c_str(), ertek.c_str())) {
+                    if (del_all)
+                        vonatok.arr_delete(i);
+                    else
+                        talalat(i, del_all, cancel);
+                    i--; // mert arr_delete minden utánna következő elem indexét egyel csökkenti
+                }
+                break;
+            }
+            case 4:
+            {
+                if (0 == std::strcmp(vonatok[i]["erkezesi_allomas"].c_str(), ertek.c_str())) {
+                    if (del_all)
+                        vonatok.arr_delete(i);
+                    else
+                        talalat(i, del_all, cancel);
+                    i--; // mert arr_delete minden utánna következő elem indexét egyel csökkenti
+                }
+                break;
+            }
+            case 5:
+            {
+                if (0 == std::strcmp(vonatok[i]["erkezesi_ido"].c_str(), ertek.c_str())) {
+                    if (del_all)
+                        vonatok.arr_delete(i);
+                    else                    
+                        talalat(i, del_all, cancel);
+                    i--; // mert arr_delete minden utánna következő elem indexét egyel csökkenti
+                }
+                break;
+            }
+            default:
+            {
+                coutput << "Törlés sikertelen" << std::endl;
+                return;
+                break;
+            }
+        }
+    }
+    coutput << "Törlés(ek) sikeres(ek)." << std::endl;
 }
 
 void Menu::jegyki() {
@@ -356,8 +451,6 @@ void Menu::eladasok() {
     std::ostringstream os;
     for (int i = 0; i < jegyek.occ(); i++) {
         os << "Vonatszám: " << jegyek[i]["vonat"] << '\t' 
-                << "Honnan: " << jegyek[i].get<Vonat*>("vonat")->operator[]("indulasi_allomas") << '\t'
-                << "Hova: " << jegyek[i].get<Vonat*>("vonat")->operator[]("erkezesi_allomas") << '\t'
                 << "Kocsiszám: " << jegyek[i]["kocsiszam"] << '\t'
                 << "Hely: " << jegyek[i]["hely"] << '\t'
                 << "Ár: " << jegyek[i]["ar"] << '\t'

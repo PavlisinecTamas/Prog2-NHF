@@ -38,7 +38,7 @@ String Jegy::operator[](const String& attr) const {
     switch (this->toJegyAttr(attr))
     {
     case JegyAttr::vonat:
-        return (*vonat)["vonatszam"];
+        return ((vonat == NULL) ? "" : (*vonat)["vonatszam"]);
         break;
     case JegyAttr::kocsiszam:
         return String(std::to_string(kocsiszam).c_str());

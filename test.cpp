@@ -10,7 +10,6 @@
 
 
 #include "gtest_lite.h"
-#define MEMTRACE
 
 int main() {
 #ifdef MEMTRACE
@@ -58,7 +57,7 @@ int main() {
         a.get<Vonat*>("vonat") = v;
         a.get<int>("kocsiszam")= 301;
         a.get<String>("hely") = String("test");
-        a.get<double>("ar") = 0.0;
+        a.get<double>("ar") = 0.0;        
         a.get<String>("kedvezmenyek") = String("ingyen_van");
         a.get<int>("kocsiosztaly") = 1;
         a.get<bool>("retur") = true;
@@ -194,14 +193,25 @@ int main() {
     
     TEST (Menurendszer, normal) {
         std::stringstream is, os;
-        is << "1\nb\ni\nvonatok.txt\n6\nn\n";
+        is << "1\nb\nn\nvonatok.txt\n";
+        is << "1\nb\ni\nvonatok.txt\n";
+        is << "2\nm\nvki.txt\n";
+        is << "2\nb\nn\njegyek.txt\n";
+        is << "2\nb\ni\njegyek.txt\n";
+        is << "2\nm\nki.txt\n";
+        is << "3\n1234\nKelenföld\n08:30\nKÖKI\n09:00\n";
+        is << "4\n1\n23420\ni\n";
+        is << "5\n1234\n402\n101\n1200\nnincs\n2\nFalse\nKÖKI\n";
+        is << "6\nn\n";
+        is << "7\nn\n";
         is << "8\n";
         Menu m(is, os);
-        EXPECT_NO_THROW(m.nextState());
-        EXPECT_NO_THROW(m.nextState());
-        EXPECT_NO_THROW(m.nextState());
-
+        while (m.active()) {
+            EXPECT_NO_THROW(m.nextState());
+        }
+        
     } ENDM
+
 #endif
 
 

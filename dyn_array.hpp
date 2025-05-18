@@ -43,13 +43,13 @@ public:
     /// @brief adott indexű elem törlése (hibás index esetén kivételt dob)
     /// @param idx - index amit törlünk
     void arr_delete(int idx)  {
-        if (idx >= 0 && idx <= occupied) {
+        if (idx >= 0 && idx < occupied) {
             for (int i = idx; i < occupied-1; i++) {
                 pData[i] = pData[i + 1];
             }
             occupied--;
             // ha nagyon kevés elem van már csak a tömbben akkor csökkentjük a foglalt terület méretét
-            if ((occupied / capacity) <= 0.5) {
+            if (((double)occupied / capacity) <= 0.5 && capacity > 10 && occupied > 0) {
                 capacity = (int)(0.75 * capacity) + 1;
                 T* pData_new = new T[capacity];
                 for (int i = 0; i < occupied; i++) {
