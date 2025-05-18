@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <cstring>
 #include <limits>
 
@@ -7,6 +8,16 @@
 #include "Vonat.hpp"
 #include "Jegy.hpp"
 
+static void check_cin(bool dob = false) {
+    if (!std::cin.good()) {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        if (std::cin.eof())
+            std::exit(-1);
+        if (dob)
+            throw std::invalid_argument("Menu: Hibas bemenet");
+    }
+}
 
 void Menu::alap()  {
     std::cout << std::endl;
@@ -26,13 +37,7 @@ void Menu::alap()  {
     while (!(valasztas >= 1 && valasztas <= 8)) {
         std::cout << "Művelet választás(1-8): ";
         std::cin >> valasztas;
-        if (std::cin.eof()) {
-            std::exit(-1);
-        }
-        if (!std::cin) {
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        }
+        check_cin();
     }
 
     switch (valasztas) 
@@ -53,13 +58,29 @@ void Menu::alap()  {
 
 void Menu::vonatadat() {
     char valasz = 'c';
+    char valasz2 = 'c';
     while (!(valasz == 'b' || valasz == 'm')) {
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         std::cout << "Vonat adatbázis betölt/ment? (b vagy m): ";
         std::cin >> valasz;
+        check_cin();
+    }
+    if (valasz == 'b') {
+        while (!(valasz2 == 'i' || valasz2 == 'n')) {
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Vonat adatbázis felülír? (i vagy n): ";
+            std::cin >> valasz2;
+            check_cin();
+        }
+    }
+    if (valasz2 == 'i') {
+        while (vonatok.occ() > 0)
+        vonatok.arr_delete(0);
     }
     String fajlnev;
     std::cout << "Fájlnév: ";
     std::cin >> fajlnev;
+    check_cin();
     if (valasz == 'b') {
         std::ifstream VonatBe(fajlnev.c_str());
 
@@ -128,13 +149,29 @@ bool Menu::str_to_bool(const String& s) const {
 
 void Menu::jegyadat() {
     char valasz = 'c';
+    char valasz2 = 'c';
     while (!(valasz == 'b' || valasz == 'm')) {
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         std::cout << "Jegy adatbázis betölt/ment? (b vagy m): ";
         std::cin >> valasz;
+        check_cin();
+    }
+    if (valasz == 'b') {
+        while (!(valasz2 == 'i' || valasz2 == 'n')) {
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Jegy adatbázis felülír? (i vagy n): ";
+            std::cin >> valasz2;
+            check_cin();
+        }
+    }
+    if (valasz2 == 'i') {
+        while (jegyek.occ() > 0)
+            jegyek.arr_delete(0);
     }
     String fajlnev;
     std::cout << "Fájlnév: ";
     std::cin >> fajlnev;
+    check_cin();
     if (valasz == 'b') {
         std::ifstream JegyBe(fajlnev.c_str());
 
@@ -179,7 +216,7 @@ void Menu::jegyadat() {
                 << jegyek[i]["kedvezmenyek"] << ';'
                 << jegyek[i]["kocsiosztaly"] << ';'
                 << jegyek[i]["retur"] << ';'
-                << jegyek[i]["eladi_allomas"] << std::endl;
+                << jegyek[i]["elado_allomas"] << std::endl;
         }
         if (JegyKi.is_open())
             std::cout << "[Válasz]: " << fajlnev << " mentése sikeres volt." << std::endl;
@@ -190,37 +227,27 @@ void Menu::jegyadat() {
     current = MenuState::Alap;
 }
 
-static void check_cin() {
-    if (!std::cin.good()) {
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        if (std::cin.eof())
-            std::exit(-1);
-        throw std::invalid_argument("Menu::vonatfel: Hibas bemenet");
-    }
-}
-
 void Menu::vonatfel() {
-    std::cout << "Vonat felvétele: " << std::endl;
+    std::cout << "Vonat felvétele (whitespace eldobásra kerül): " << std::endl;
     current = MenuState::Alap;
     Vonat v;
     try {
         std::cout << "[Új vonat][vonatszam]: ";
         std::cin >> v.get<int>("vonatszam"); 
-        check_cin();
+        check_cin(true);
         const int& vsz = v.get<int>("vonatszam");
         std::cout << '[' << vsz << ']' << "[indulasi_allomas]: ";
         std::cin >> v.get<String>("indulasi_allomas");
-        check_cin();
+        check_cin(true);
         std::cout << '[' << vsz << ']' << "[indulasi_ido]: ";
         std::cin >> v.get<String>("indulasi_ido");
-        check_cin();
+        check_cin(true);
         std::cout << '[' << vsz << ']' << "[erkezesi_allomas]: ";
         std::cin >> v.get<String>("erkezesi_allomas");
-        check_cin();
+        check_cin(true);
         std::cout << '[' << vsz << ']' << "[erkezesi_ido]: ";
         std::cin >> v.get<String>("erkezesi_ido");
-        check_cin();
+        check_cin(true);
         vonatok.append(v);
     } catch (...) {
         std::cout << "[Új vonat] Vonat felvétele sikertelen" << std::endl;
@@ -230,7 +257,21 @@ void Menu::vonatfel() {
 }
 
 void Menu::vonattor() {
-    std::cout << ">>vonattor" << std::endl;
+    std::cout << "Melyik mező alapján történjen a törlés?" << std::endl;
+
+    std::cout << "\t1. vonatszam" << std::endl;
+    std::cout << "\t2. indulasi_allomas" << std::endl;    
+    std::cout << "\t3. indulasi_ido" << std::endl;
+    std::cout << "\t4. erkezesi_allomas" << std::endl;
+    std::cout << "\t5. erkezesi_ido" << std::endl;
+
+    int valasztas = 0;
+    while (!(valasztas >= 1 && valasztas <= 5)) {
+        std::cout << "Mező választás(1-5):";
+        std::cin >> valasztas;
+        check_cin();
+    }
+    std::cout << (Vonat::VonatAttr::vonatszam == Vonat::VonatAttr(1)) << std::endl;
     current = MenuState::Alap;
 }
 
@@ -240,7 +281,38 @@ void Menu::jegyki() {
 }
 
 void Menu::menetrend() {
-    std::cout << ">>menetrend" << std::endl;
+    std::ostringstream os;
+    for (int i = 0; i < vonatok.occ(); i++) {
+        os << "Vonatszám: " << vonatok[i]["vonatszam"] << '\t'
+                << "Honnan: " << vonatok[i]["indulasi_allomas"] << '\t'
+                << "Indul: " << vonatok[i]["indulasi_ido"] << '\t'
+                << "Hova: " << vonatok[i]["erkezesi_allomas"] << '\t'
+                << "Érkezik: " << vonatok[i]["erkezesi_ido"] << std::endl;
+    }
+    std::cout << os.str() << std::endl;
+    char valasz = 'c';
+    while (!(valasz == 'i' || valasz == 'n')) {
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << std::endl << "Menetrend mentése? (i vagy n): ";
+        std::cin >> valasz;
+        check_cin();
+    }
+    if (valasz == 'i') {
+        String fajlnev;
+        std::cout << "Fájlnév: ";
+        std::cin >> fajlnev;
+        check_cin();
+
+        std::ofstream MenetrendKi(fajlnev.c_str());
+
+        MenetrendKi << os.str() << std::endl;
+
+        if (MenetrendKi.is_open())
+            std::cout << "[Válasz]: " << fajlnev << " mentése sikeres volt." << std::endl;
+        else
+            std::cout << "[Válasz]: " << fajlnev << " mentése sikertelen volt." << std::endl;
+        MenetrendKi.close();
+    }
     current = MenuState::Alap;
 }
 

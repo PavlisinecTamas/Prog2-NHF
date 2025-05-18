@@ -3,7 +3,7 @@ SRCS = *.cpp *.hpp
 HEADS = *.h
 
 CXX = g++
-CXXFLAGS = #-pedantic -Wall -Werror -g -fsanitize=address
+CXXFLAGS = -pedantic -Wall -Werror -g -static-libasan -fsanitize=address
 
 .PHONY: all
 all: $(PROG)

@@ -70,9 +70,9 @@ public:
     /// @return igaz ha ennek a jegynek nagyobb az ára mint j jegynek
     bool operator<(const Jegy& j)  const;
 
-    /// @brief Jegy egy mezőjének elérése 
+    /// @brief Jegy osztály egy mezőjének elérése 
     /// @param attr - mező neve
-    /// @return Jegy egy mezőjének Stringbe sorosított értéke
+    /// @return Jegy osztály egy mezőjének Stringbe sorosított értéke
     /// ha nincs adott nevű mező a jegy osztályban akkor std::invalid_argument kivételt dob
     String operator[](const String& attr) const;
     
@@ -90,9 +90,9 @@ public:
     };
 
     /// @brief kivételek a get<T> templatenak
-    std::exception hibas_tipus = std::invalid_argument("Hibas template parameter");
+    std::invalid_argument hibas_tipus = std::invalid_argument("Hibas template parameter");
     /// @brief kivételek a get<T> templatenak
-    std::exception nincs_mezo = std::invalid_argument("A Jegy osztalynak nincs ilyen mezoje");
+    std::invalid_argument nincs_mezo = std::invalid_argument("A Jegy osztalynak nincs ilyen mezoje");
 
     /// @brief mezőt nevesítő stringből megfelelő típust hoz létre
     /// @param a - mezőt nevesítő String

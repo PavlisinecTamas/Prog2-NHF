@@ -3,14 +3,7 @@
 
 #include "Vonat.hpp"
 
-Vonat::Vonat(const Vonat& v) {
-    vonatszam = v.vonatszam;
-    indulasi_allomas = v.indulasi_allomas;
-    indulasi_ido = v.indulasi_ido;
-    erkezesi_allomas = v.erkezesi_allomas;
-    erkezesi_ido = v.erkezesi_ido;
-}
-
+/// @brief Vonat osztály egy mezőjének elérése
 String Vonat::operator[](const String& attr) const {
     switch (this->toVonatAttr(attr))
     {
@@ -35,6 +28,7 @@ String Vonat::operator[](const String& attr) const {
     }
 }
 
+/// @brief mezőt nevesítő Stringből megfelelő típust hoz létre
 Vonat::VonatAttr Vonat::toVonatAttr(const String& a) const {
     if (std::strcmp(a.c_str(), "vonatszam") == 0) return VonatAttr::vonatszam;
     if (std::strcmp(a.c_str(), "indulasi_allomas") == 0) return VonatAttr::indulasi_allomas;
@@ -44,6 +38,7 @@ Vonat::VonatAttr Vonat::toVonatAttr(const String& a) const {
     return VonatAttr::ismeretlen;
 }
 
+/// @brief get<T> template specializáció String típusra
 template<>
 String& Vonat::get<String>(const String& attr) {
     VonatAttr vonatA = this->toVonatAttr(attr);
@@ -71,6 +66,7 @@ String& Vonat::get<String>(const String& attr) {
     }
 }
 
+/// @brief get<T> template specializáció int típusra
 template<>
 int& Vonat::get<int>(const String& attr) {
     VonatAttr vonatA = this->toVonatAttr(attr);
